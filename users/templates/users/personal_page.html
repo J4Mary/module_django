@@ -1,0 +1,11 @@
+{% extends 'products/base.html' %}
+
+{% block title %} My info {% endblock %}
+
+{% block content %}
+<h6> Username: {{ user.username }} </h6>
+<h6> Cash: {{ user.cash }} </h6>
+<h6> Email: {{ user.email }} </h6>
+<a href="{% url 'all_purchases' %}" class="btn btn-info">My purchases</a>
+<a href="{% url 'all_refunds' %}" class="btn btn-danger">My refunds</a>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'products/base.html' %}
+
+{% block title %}Your refunds{% endblock %}
+
+{% block content%}
+{% if user.is_superuser %}
+    <div>
+        {% for refund in refund_list %}
+            {% if refund.status == 1 %}
+                <h6>Date: {{ refund.created_at }}. Customer: {{ refund.purchase.buyer }}. Product: {{ refund.purchase.product.name }}. Amount  {{ refund.purchase.amount }}.</h6>
+           <td><form action="" method="post">
+            <input type="hidden" name="refund_id" value="{{refund.id}}">
+            <input class="btn btn-outline-success" type="submit" name="action" value="approve">
+            <input class="btn btn-outline-danger" type="submit" name="action" value="decline">
+                  {% csrf_token %}
+            </form></td>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% else %}
+    <div>
+            {% for refund in refund_list %}
+                {% if user == refund.purchase.buyer %}
+                    <h6>Date: {{ refund.created_at }}. Product: {{ refund.purchase.product.name }}. Amount  {{ refund.purchase.amount }} </h6>
+                    {% if refund.status == 1 %}
+                        NEW
+                    {% endif %}
+                    {% if refund.status == 2 %}
+                        DECLINED
+                    {% endif %}
+                    {% if refund.status == 3 %}
+                        APPROVED
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+        </div>
+{% endif %}
+{% endblock %}

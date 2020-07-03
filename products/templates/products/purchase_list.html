@@ -1,0 +1,28 @@
+{% extends 'products/base.html' %}
+
+{% block title %}Your purchases{% endblock %}
+
+{% block content%}
+{% if user.is_superuser %}
+    <div>
+        {% for purchase in purchase_list %}
+            <h6>Date: {{ purchase.created_at }}.  Customer: {{purchase.buyer}}. Product: {{ purchase.product.name }}. Amount  {{ purchase.amount }}</h6>
+
+        {% endfor %}
+    </div>
+{% else %}
+    <div>
+            {% for purchase in purchase_list %}
+                {% if user == purchase.buyer %}
+                    <h6>Date: {{ purchase.created_at }}. Product: {{ purchase.product.name }}. Amount  {{ purchase.amount }}</h6>
+                    <form action="" method="post">
+                    {% csrf_token %}
+                    <label> Refund this purchase: </label>
+                    <input type='hidden' name='purchase_id' value='{{ purchase.id }}'>
+                    <input type="submit" name='Refund' value="Refund">
+                </form>
+                {% endif %}
+            {% endfor %}
+        </div>
+{% endif %}
+{% endblock %}
