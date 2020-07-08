@@ -54,9 +54,11 @@
 </nav>
 {% if messages %}
     <ul class="messages">
-        {% for message in messages %}
-            <li>{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-        {% endfor %}
+    {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+            {{ message }}
+        </li>
+    {% endfor %}
     </ul>
 {% endif %}
 {% block content %}
@@ -67,6 +69,7 @@
         <div>
             {% for product in product_list %}
                 <h2>{{ product.name }}</h2>
+                <p><img src="{{ product.image.url }}"  alt="Sorry, no picture" width="200px"></p>
                 <h6>Description: {{ product.description }}</h6>
                 <h6>Price: {{ product.price }}</h6>
                 <h6>Available quantity: {{ product.available }}</h6>

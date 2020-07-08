@@ -5,7 +5,7 @@ from . import models
 
 
 class Admin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'description', 'price', 'available']
+    list_display = ['id', 'name', 'description', 'price', 'image', 'available']
     list_editable = ['name', 'price', 'available']
 
 

@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
@@ -23,7 +24,7 @@ class Homepage(ListView):
         product.available -= amount
         buyer.cash -= amount * product.price
         if product.available < amount:
-            return render(request, 'products/no_product.html', {'product': product, 'user': buyer})
+            return render(request, 'products/no_products.html', {'product': product, 'user': buyer})
         elif buyer.cash < amount * product.price:
             return render(request, 'products/no_money.html', {'product': product, 'user': buyer})
         else:
@@ -31,6 +32,7 @@ class Homepage(ListView):
             buyer.save()
             product.save()
             purchase.save()
+            messages.success(request, "The purchase was made!")
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
@@ -63,6 +65,9 @@ class PurchaseList(ListView):
         if purchase.get_time_diff() <= 180:
             refund = models.Refund(purchase=purchase, status=1)
             refund.save()
+            purchase.is_active = False
+            purchase.save()
+            messages.success(request, "The refund was made!")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         else:
             return render(request, 'products/refund_warning.html')
@@ -76,12 +81,12 @@ class RefundListView(ListView):
         refund = models.Refund.objects.get(pk=refund_id)
         action = request.POST.get('action')
         if action == 'approve':
-            refund.status = 2
+            refund.status = 3
             refund.purchase.buyer.cash += refund.purchase.amount * refund.purchase.product.price
             refund.purchase.product.available += refund.purchase.amount
             refund.purchase.buyer.save()
             refund.purchase.product.save()
         elif action == 'decline':
-            refund.status = 3
+            refund.status = 2
         refund.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

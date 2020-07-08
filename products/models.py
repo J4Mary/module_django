@@ -19,6 +19,7 @@ class Product(TimeStampModel):
     name = models.CharField(max_length=80)
     description = models.TextField()
     price = models.IntegerField(blank=True, null=True)
+    image = models.ImageField(blank=True, null=True, upload_to='product_images/')
     available = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
@@ -36,6 +37,7 @@ class Purchase(TimeStampModel):
     buyer = models.ForeignKey(USER_MODEL, on_delete=models.SET_NULL, blank=True, null=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     amount = models.IntegerField(blank=True, null=True)
+    is_active = models.NullBooleanField(default=True)
 
     def get_time_diff(self):
         now = datetime.timestamp(datetime.now())

@@ -15,11 +15,15 @@
             {% for purchase in purchase_list %}
                 {% if user == purchase.buyer %}
                     <h6>Date: {{ purchase.created_at }}. Product: {{ purchase.product.name }}. Amount  {{ purchase.amount }}</h6>
-                    <form action="" method="post">
-                    {% csrf_token %}
-                    <label> Refund this purchase: </label>
-                    <input type='hidden' name='purchase_id' value='{{ purchase.id }}'>
-                    <input type="submit" name='Refund' value="Refund">
+                    {% if purchase.is_active == True %}
+                        <form action="" method="post">
+                        {% csrf_token %}
+                        <label> Refund this purchase: </label>
+                        <input type='hidden' name='purchase_id' value='{{ purchase.id }}'>
+                        <input type="submit" name='Refund' value="Refund">
+                    {% else %}
+                            <h6>You cannot return this purchase</h6>
+                    {% endif %}
                 </form>
                 {% endif %}
             {% endfor %}
